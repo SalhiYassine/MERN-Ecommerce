@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Button, Row, Col, Image, ListGroup, Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Rating from '../components/Rating';
+import { useDispatch, useSelector } from 'react-redux';
+import { listProductDetails } from '../actions/productActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 
 const ProductPage = ({ match }) => {
-  const [product, setProduct] = useState({});
-
-  const fetchProduct = async () => {
-    const { data } = await axios.get(`/api/products/${match.params.id}`);
-    setProduct(data);
-  };
+  const dispatch = useDispatch();
+  const { loading, error, product } = useSelector(
+    (state) => state.productDetails
+  );
 
   useEffect(() => {
-    fetchProduct();
-  }, [match]);
+    dispatch(listProductDetails(match.params.id));
+  }, [dispatch, match]);
 
   const { name, image, numReviews, rating, price, description, countInStock } =
     product;
@@ -27,52 +28,58 @@ const ProductPage = ({ match }) => {
           Go Back
         </Button>
       </LinkContainer>
-      <Row>
-        <Col md={6}>
-          <Image src={image} alt={name} fluid />
-        </Col>
-        <Col md={3}>
-          <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h3>{name}</h3>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <Rating value={rating} text={`${numReviews} reviews`} />
-            </ListGroup.Item>
-            <ListGroup.Item>Price: £ {price}</ListGroup.Item>
-            <ListGroup.Item>Description: {description}</ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={3}>
-          <Card>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant='danger'>{error}</Message>
+      ) : (
+        <Row>
+          <Col md={6}>
+            <Image src={image} alt={name} fluid />
+          </Col>
+          <Col md={3}>
             <ListGroup variant='flush'>
               <ListGroup.Item>
-                <Row>
-                  <Col>Price:</Col>
-                  <Col>
-                    <strong>£{price ? price : 0.0}</strong>
-                  </Col>
-                </Row>
+                <h3>{name}</h3>
               </ListGroup.Item>
               <ListGroup.Item>
-                <Row>
-                  <Col>Status:</Col>
-                  <Col>
-                    <strong>
-                      {countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
-                    </strong>
-                  </Col>
-                </Row>
+                <Rating value={rating} text={`${numReviews} reviews`} />
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Button disbaled={countInStock <= 0} className='w-100'>
-                  ADD TO CART
-                </Button>
-              </ListGroup.Item>
+              <ListGroup.Item>Price: £ {price}</ListGroup.Item>
+              <ListGroup.Item>Description: {description}</ListGroup.Item>
             </ListGroup>
-          </Card>
-        </Col>
-      </Row>
+          </Col>
+          <Col md={3}>
+            <Card>
+              <ListGroup variant='flush'>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Price:</Col>
+                    <Col>
+                      <strong>£{price ? price : 0.0}</strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Status:</Col>
+                    <Col>
+                      <strong>
+                        {countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                      </strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Button disbaled={countInStock <= 0} className='w-100'>
+                    ADD TO CART
+                  </Button>
+                </ListGroup.Item>
+              </ListGroup>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </div>
   );
 };
