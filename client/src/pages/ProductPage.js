@@ -13,11 +13,12 @@ import { LinkContainer } from 'react-router-bootstrap';
 import Rating from '../components/Rating';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProductDetails } from '../actions/productActions';
+import { addToCart } from '../actions/cartActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 const ProductPage = ({ match, history }) => {
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
   const dispatch = useDispatch();
   const { loading, error, product } = useSelector(
     (state) => state.productDetails
@@ -29,7 +30,8 @@ const ProductPage = ({ match, history }) => {
   }, [dispatch, match]);
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+    dispatch(addToCart(match.params.id, Number(qty)));
+    history.push(`/cart`);
   };
 
   return (
