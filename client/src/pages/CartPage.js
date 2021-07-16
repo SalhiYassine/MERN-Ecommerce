@@ -12,13 +12,13 @@ import {
   Form,
 } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { addToCart, changeCartQuantity } from '../actions/cartActions';
+import { changeCartQuantity, removeFromCart } from '../actions/cartActions';
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  const removeFromCartHandler = (id) => {};
+
   const checkoutHandler = () => {};
 
   return (
@@ -64,7 +64,7 @@ const CartPage = () => {
                   <Col md={2}>
                     <Button
                       variant='light'
-                      onClick={() => removeFromCartHandler(item.product)}
+                      onClick={() => dispatch(removeFromCart(item.product))}
                     >
                       <i className='fas fa-trash'></i>
                     </Button>
@@ -75,7 +75,7 @@ const CartPage = () => {
           </ListGroup>
         )}
       </Col>
-      <Col md={4}>
+      <Col md={4} lg={4} xl={4}>
         <Card>
           <ListGroup variant='flush'>
             <ListGroup.Item>
@@ -94,10 +94,11 @@ const CartPage = () => {
             <ListGroup.Item>
               <Button
                 type='button'
+                className='btn-block w-100'
                 disabled={cartItems.length < 1}
                 onClick={checkoutHandler}
               >
-                Checkout
+                Proceed To Checkout
               </Button>
             </ListGroup.Item>
           </ListGroup>

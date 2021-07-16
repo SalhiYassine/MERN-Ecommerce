@@ -56,6 +56,15 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
         };
       }
     }
+    case CART_REMOVE_ITEM: {
+      return {
+        ...state,
+        // Adds all items that doesn't match the item to a list and returns that
+        cartItems: state.cartItems.filter(
+          (x) => x.product !== action.payload.id
+        ),
+      };
+    }
     default:
       return state;
   }
