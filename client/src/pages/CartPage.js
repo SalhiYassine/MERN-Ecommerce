@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import { Link } from 'react-router-dom';
@@ -11,13 +11,11 @@ import {
   Card,
   Form,
 } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import { changeCartQuantity, removeFromCart } from '../actions/cartActions';
 
 const CartPage = () => {
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { cartItems } = useSelector((state) => state.cart);
 
   const checkoutHandler = () => {};
 

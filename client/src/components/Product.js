@@ -4,17 +4,7 @@ import Rating from './Rating';
 import { Link } from 'react-router-dom';
 
 const Product = ({ product }) => {
-  const {
-    _id,
-    name,
-    image,
-    description,
-    brand,
-    category,
-    price,
-    rating,
-    numReviews,
-  } = product;
+  const { _id, name, image, price, rating, numReviews } = product;
 
   return (
     <Card className='my-3 p-3 rounded'>
