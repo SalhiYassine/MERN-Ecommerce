@@ -7,27 +7,28 @@ import { login } from '../actions/userAction';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
 
-const LoginPage = ({ history }) => {
+const LoginPage = ({ history, location }) => {
   const dispatch = useDispatch();
-  const { laoding, error, userInfo } = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = useSelector((state) => state.userLogin);
   const [email, setEmail] = useState('');
-  const [redirect, setRedirect] = useState('');
   const [password, setPassword] = useState('');
+
+  const redirect = location.search ? location.search.split('=')[1] : '/';
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(login(email, password));
   };
 
   useEffect(() => {
-    return () => {
-      if (userInfo) {
-        history.push();
-      }
-    };
-  }, []);
+    return () => {};
+  }, [history, location, userInfo, redirect]);
 
   return (
     <FormContainer>
       <h1>Sign in</h1>
+      {error && <Message variant='danger'>{error}</Message>}
+      {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId='email'>
           <Form.Label>Email Address</Form.Label>
@@ -38,7 +39,7 @@ const LoginPage = ({ history }) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId='password'>
+        <Form.Group controlId='password' className='my-3'>
           <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
@@ -52,12 +53,8 @@ const LoginPage = ({ history }) => {
         </Button>
         <Row>
           <Col>
-            New Customer?{' '}
-            <Link
-              to={redirect ? `/register?redirect=${redirect}` : `/register`}
-            >
-              Register
-            </Link>
+            New Customer?
+            <Link to={`/register`}>Register</Link>
           </Col>
         </Row>
       </Form>
