@@ -15,6 +15,8 @@ import ProductPage from './pages/ProductPage';
 import NotFound from './pages/NotFound';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
@@ -28,13 +30,26 @@ const App = () => {
             {/* Routes */}
             <Route path={['/', '/home']} exact component={HomePage} />
             <Route path={'/product/:id'} exact component={ProductPage} />
+            <Route path={'/cart/:id?'} exact component={CartPage} />
+            {/* Logged In */}
+            <PrivateRoute
+              isAuthenticated={userInfo}
+              path={'/profile'}
+              component={ProfilePage}
+            />
+            {/* Not Logged In */}
             <PublicRoute
               isAuthenticated={userInfo}
               path={'/login'}
               exact
               component={LoginPage}
             />
-            <Route path={'/cart/:id?'} exact component={CartPage} />
+            <PublicRoute
+              isAuthenticated={userInfo}
+              path={'/register'}
+              exact
+              component={RegisterPage}
+            />
             {/* Default Route if no urls are hit */}
             <Route path={['/404', '*']} exact component={NotFound} />
           </Switch>
