@@ -13,11 +13,13 @@ import {
 } from 'react-bootstrap';
 import { changeCartQuantity, removeFromCart } from '../actions/cartActions';
 
-const CartPage = () => {
+const CartPage = ({ history }) => {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
 
-  const checkoutHandler = () => {};
+  const checkoutHandler = () => {
+    history.push('/shipping');
+  };
 
   return (
     <Row>
