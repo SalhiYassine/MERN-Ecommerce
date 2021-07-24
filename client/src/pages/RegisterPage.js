@@ -87,7 +87,7 @@ const RegisterPage = ({ history, location }) => {
         <Row>
           <Col>
             Already a customer?
-            <Link to={`/login?redirect=${path}`}> Log in</Link>
+            <Link to={path ? `/login?redirect=${path}` : `/login`}>Log in</Link>
           </Col>
         </Row>
       </Form>

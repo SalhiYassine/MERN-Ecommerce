@@ -18,6 +18,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import ShippingPage from './pages/ShippingPage';
+import PaymentSelectionPage from './pages/PaymentSelectionPage';
+import PlaceOrderPage from './pages/PlaceOrderPage';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
@@ -42,6 +44,16 @@ const App = () => {
               isAuthenticated={userInfo}
               path={'/shipping'}
               component={ShippingPage}
+            />
+            <PrivateRoute
+              isAuthenticated={userInfo}
+              path={'/payment'}
+              component={PaymentSelectionPage}
+            />
+            <PrivateRoute
+              isAuthenticated={userInfo}
+              path={'/placeorder'}
+              component={PlaceOrderPage}
             />
             {/* Not Logged In */}
             <PublicRoute
