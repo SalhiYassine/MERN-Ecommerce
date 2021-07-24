@@ -18,7 +18,9 @@ const RegisterPage = ({ history, location }) => {
   const [message, setMessage] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
-  const redirect = location.search ? location.search.split('=')[1] : '/';
+  const path = window.location.search.split('=')[1]
+    ? window.location.search.split('=')[1]
+    : '';
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ const RegisterPage = ({ history, location }) => {
     return () => {
       setMessage('');
     };
-  }, [history, location, userInfo, redirect]);
+  }, [history, location, userInfo]);
 
   return (
     <FormContainer>
@@ -85,7 +87,7 @@ const RegisterPage = ({ history, location }) => {
         <Row>
           <Col>
             Already a customer?
-            <Link to={`/login`}> Log in</Link>
+            <Link to={`/login?redirect=${path}`}> Log in</Link>
           </Col>
         </Row>
       </Form>

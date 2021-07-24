@@ -52,8 +52,7 @@ const CartPage = ({ history }) => {
                             Number(e.target.value)
                           )
                         )
-                      }
-                    >
+                      }>
                       {[...Array(item.countInStock).keys()].map((x) => (
                         <option key={x + 1} value={x + 1}>
                           {x + 1}
@@ -64,8 +63,7 @@ const CartPage = ({ history }) => {
                   <Col md={2}>
                     <Button
                       variant='light'
-                      onClick={() => dispatch(removeFromCart(item.product))}
-                    >
+                      onClick={() => dispatch(removeFromCart(item.product))}>
                       <i className='fas fa-trash'></i>
                     </Button>
                   </Col>
@@ -96,8 +94,7 @@ const CartPage = ({ history }) => {
                 type='button'
                 className='btn-block w-100'
                 disabled={cartItems.length < 1}
-                onClick={checkoutHandler}
-              >
+                onClick={checkoutHandler}>
                 Proceed To Checkout
               </Button>
             </ListGroup.Item>

@@ -4,6 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getDetails } from '../actions/userAction';
+import { USER_UPDATE_DETAILS_RESET } from '../constants/userConstants';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { updateDetails } from '../actions/userAction';
@@ -15,7 +16,7 @@ const ProfilePage = ({ history, location }) => {
     (state) => state.userDetails
   );
 
-  const updateUser = useSelector((state) => state.userUpdateDetails);
+  const { success } = useSelector((state) => state.userUpdateDetails);
   const { userInfo } = useSelector((state) => state.userLogin);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -34,13 +35,14 @@ const ProfilePage = ({ history, location }) => {
   };
 
   useEffect(() => {
-    if (!userDetails) {
+    if (!userDetails || success) {
+      dispatch({ type: USER_UPDATE_DETAILS_RESET });
       dispatch(getDetails('profile'));
     } else {
       setName(userDetails.name);
       setEmail(userDetails.email);
     }
-  }, [dispatch, history, location, userInfo, userDetails]);
+  }, [dispatch, history, location, userInfo, userDetails, success]);
 
   return (
     <Row>
@@ -48,9 +50,7 @@ const ProfilePage = ({ history, location }) => {
         <h1>Profile</h1>
         {message && <Message variant='danger'>{message}</Message>}
         {error && <Message variant='danger'>{error}</Message>}
-        {updateUser.success && (
-          <Message variant='success'>{'Profile Updated!'}</Message>
-        )}
+        {success && <Message variant='success'>{'Profile Updated!'}</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId='name' className='my-3'>

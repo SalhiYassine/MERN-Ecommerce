@@ -13,7 +13,9 @@ const LoginPage = ({ history, location }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const redirect = location.search ? location.search.split('=')[1] : '/';
+  const path = window.location.search.split('=')[1]
+    ? window.location.search.split('=')[1]
+    : '';
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -22,7 +24,7 @@ const LoginPage = ({ history, location }) => {
 
   useEffect(() => {
     return () => {};
-  }, [history, location, userInfo, redirect]);
+  }, [history, location, userInfo]);
 
   return (
     <FormContainer>
@@ -54,7 +56,7 @@ const LoginPage = ({ history, location }) => {
         <Row>
           <Col>
             New Customer?
-            <Link to={`/register`}>Register</Link>
+            <Link to={`/register?redirect=${path}`}>Register</Link>
           </Col>
         </Row>
       </Form>
