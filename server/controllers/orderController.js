@@ -3,10 +3,24 @@ import asyncHandler from 'express-async-handler';
 
 // @desc    Fetch all orders
 // @route   GET /api/orders
-// @access  Public
+// @access  Private
 export const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({});
   res.json(orders);
+});
+
+// @desc    Fetch all orders
+// @route   GET /api/orders
+// @access  Private
+export const getOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate('user', 'name email')
+  
+  if (!order ) {
+    res.status(404);
+    throw new Error('No order found!');
+  }
+
+  res.json(order);
 });
 
 // @desc    Create an order
