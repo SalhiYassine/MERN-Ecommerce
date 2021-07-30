@@ -12,6 +12,18 @@ const Header = () => {
     dispatch(logOut());
   };
 
+  const userLoggedIn = () => {
+    try {
+      if (userInfo._id) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
   return (
     <header>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
@@ -29,7 +41,7 @@ const Header = () => {
               </LinkContainer>
 
               {/* User Logged In : */}
-              {userInfo && (
+              {userLoggedIn() && (
                 <>
                   <NavDropdown title={userInfo.name} id='username'>
                     <LinkContainer to='/profile' as='div'>
@@ -44,7 +56,7 @@ const Header = () => {
               )}
 
               {/* User NOT Logged In : */}
-              {!userInfo && (
+              {!userLoggedIn() && (
                 <LinkContainer to='/login'>
                   <Nav.Link>
                     <i className='fas fa-user'></i> Sign In

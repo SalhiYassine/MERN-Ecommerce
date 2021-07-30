@@ -20,9 +20,22 @@ import ProfilePage from './pages/ProfilePage';
 import ShippingPage from './pages/ShippingPage';
 import PaymentSelectionPage from './pages/PaymentSelectionPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
+import OrderPage from './pages/OrderPage';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
+  const userLoggedIn = () => {
+    try {
+      if (userInfo._id) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+  console.log(userLoggedIn());
 
   return (
     <Router>
@@ -36,33 +49,38 @@ const App = () => {
             <Route path={'/cart/:id?'} exact component={CartPage} />
             {/* Logged In */}
             <PrivateRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
+              path={'/order/:id'}
+              component={OrderPage}
+            />
+            <PrivateRoute
+              isAuthenticated={userLoggedIn()}
               path={'/profile'}
               component={ProfilePage}
             />
             <PrivateRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
               path={'/shipping'}
               component={ShippingPage}
             />
             <PrivateRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
               path={'/payment'}
               component={PaymentSelectionPage}
             />
             <PrivateRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
               path={'/placeorder'}
               component={PlaceOrderPage}
             />
             {/* Not Logged In */}
             <PublicRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
               path={'/login'}
               component={LoginPage}
             />
             <PublicRoute
-              isAuthenticated={userInfo}
+              isAuthenticated={userLoggedIn()}
               path={'/register'}
               component={RegisterPage}
             />
