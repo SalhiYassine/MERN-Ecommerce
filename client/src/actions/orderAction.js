@@ -9,6 +9,9 @@ import {
   ORDER_PAY_SUCCESS,
   ORDER_PAY_FAIL,
   ORDER_PAY_RESET,
+  ORDER_PROFILE_REQUEST,
+  ORDER_PROFILE_SUCCESS,
+  ORDER_PROFILE_FAIL,
 } from '../constants/orderConstants';
 import axios from 'axios';
 
@@ -68,6 +71,36 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
     });
   }
 };
+
+export const getMyOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_PROFILE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders/myorders`, config);
+
+    dispatch({ type: ORDER_PROFILE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_PAY_REQUEST });

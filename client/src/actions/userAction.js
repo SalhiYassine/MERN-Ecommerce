@@ -13,8 +13,10 @@ import {
   USER_UPDATE_DETAILS_SUCCESS,
   USER_UPDATE_DETAILS_FAIL,
   USER_UPDATE_DETAILS_RESET,
+  USER_DETAILS_RESET,
 } from '../constants/userConstants';
 import axios from 'axios';
+import { ORDER_PROFILE_RESET } from '../constants/orderConstants';
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -173,5 +175,7 @@ export const updateDetails = (user) => async (dispatch, getState) => {
 export const logOut = () => async (dispatch) => {
   localStorage.removeItem('userInfo');
   localStorage.removeItem('userDetails');
+  dispatch({ type: USER_DETAILS_RESET });
+  dispatch({ type: ORDER_PROFILE_RESET });
   dispatch({ type: USER_LOGOUT });
 };

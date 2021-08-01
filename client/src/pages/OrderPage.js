@@ -15,7 +15,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
-import { getOrderDetails } from '../actions/orderAction';
+import { getOrderDetails, payOrder } from '../actions/orderAction';
 import axios from 'axios';
 import { ORDER_PAY_RESET } from '../constants/orderConstants';
 
@@ -29,6 +29,7 @@ const OrderPage = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const successPaymentHandler = (paymentResult) => {
+    dispatch(payOrder(match.params.id, paymentResult));
     console.log(paymentResult);
   };
 
@@ -86,7 +87,9 @@ const OrderPage = ({ match, history }) => {
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
-                <Message variant='success'>Delivered</Message>
+                <Message variant='success'>
+                  Delivered at {order.deliveredAt}
+                </Message>
               ) : (
                 <Message variant='danger'>Not Delivered</Message>
               )}
@@ -99,7 +102,7 @@ const OrderPage = ({ match, history }) => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant='success'>Paid</Message>
+                <Message variant='success'>Paid at {order.paidAt}</Message>
               ) : (
                 <Message variant='danger'>Not Paid</Message>
               )}
