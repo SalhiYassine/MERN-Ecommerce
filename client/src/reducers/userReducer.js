@@ -14,6 +14,10 @@ import {
   USER_UPDATE_DETAILS_FAIL,
   USER_UPDATE_DETAILS_RESET,
   USER_DETAILS_RESET,
+  USER_ADMIN_LIST_REQUEST,
+  USER_ADMIN_LIST_SUCCESS,
+  USER_ADMIN_LIST_FAIL,
+  USER_ADMIN_LIST_RESET,
 } from '../constants/userConstants';
 
 export const userLoginReducer = (state = {}, action) => {
@@ -71,6 +75,22 @@ export const userUpdateDetailsReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case USER_UPDATE_DETAILS_RESET:
       return {};
+
+    default:
+      return state;
+  }
+};
+
+export const userAdminListReducer = (state = { userList: [] }, action) => {
+  switch (action.type) {
+    case USER_ADMIN_LIST_REQUEST:
+      return { loading: true, userList: [] };
+    case USER_ADMIN_LIST_SUCCESS:
+      return { loading: false, success: true, userList: action.payload };
+    case USER_ADMIN_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_ADMIN_LIST_RESET:
+      return { userList: [] };
 
     default:
       return state;

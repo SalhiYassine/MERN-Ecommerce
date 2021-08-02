@@ -72,6 +72,21 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+
+// @desc   gets the all users
+// @route   GET /api/users/
+// @access  Private && Admin
+
+export const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({}).select('-password');
+  if (users) {
+    res.json(users);
+  } else {
+    res.status(401);
+    throw new Error('Users not found');
+  }
+});
+
 // @desc   edit the user profile based on a valid token
 // @route   PUT /api/users/profile
 // @access  Private

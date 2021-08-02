@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // Custom Routing
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
+import AdminRoute from './routes/AdminRoute';
 //Redux
 import { useSelector } from 'react-redux';
 // Components
@@ -21,12 +22,24 @@ import ShippingPage from './pages/ShippingPage';
 import PaymentSelectionPage from './pages/PaymentSelectionPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
+import AdminUserList from './pages/AdminUserList';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
   const userLoggedIn = () => {
     try {
       if (userInfo._id) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+  const userAdmin = () => {
+    try {
+      if (userLoggedIn() && userInfo.isAdmin) {
         return true;
       } else {
         return null;
@@ -73,6 +86,14 @@ const App = () => {
               path={'/placeorder'}
               component={PlaceOrderPage}
             />
+            {/* Admin && Logged In */}
+            <AdminRoute
+              path={'/admin'}
+              isAuthenticated={userLoggedIn()}
+              isAdmin={userAdmin()}
+              component={AdminUserList}
+            />
+
             {/* Not Logged In */}
             <PublicRoute
               isAuthenticated={userLoggedIn()}

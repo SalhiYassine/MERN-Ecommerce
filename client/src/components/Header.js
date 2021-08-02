@@ -23,6 +23,17 @@ const Header = () => {
       return null;
     }
   };
+  const userAdmin = () => {
+    try {
+      if (userLoggedIn() && userInfo.isAdmin) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
 
   return (
     <header>
@@ -34,17 +45,34 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
-              <LinkContainer to='/cart' as='div'>
+              <LinkContainer to='/cart' as='div' className='me-3'>
                 <Nav.Link>
                   <i className='fas fa-shopping-cart'></i> Cart
                 </Nav.Link>
               </LinkContainer>
 
+              {/* User Admin : */}
+              {userAdmin() && (
+                <>
+                  <NavDropdown title={'admin'} id='admin' className='me-3'>
+                    <LinkContainer to='/admin' as='div'>
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              )}
+
               {/* User Logged In : */}
               {userLoggedIn() && (
                 <>
-                  <NavDropdown title={userInfo.name} id='username'>
-                    <LinkContainer to='/profile' as='div'>
+                  <NavDropdown
+                    className='m-0'
+                    title={userInfo.name}
+                    id='username'>
+                    <LinkContainer to='/profile' as='div' className='me-3'>
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>
 
