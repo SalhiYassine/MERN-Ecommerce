@@ -73,6 +73,44 @@ export const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc   gets the user
+// @route   GET /api/user/:id
+// @access  Private && Admin
+
+export const getUser = asyncHandler(async (req, res) => {
+  const users = await User.findById(req.params.id).select('-password');
+  if (users) {
+    res.json(users);
+  } else {
+    res.status(401);
+    throw new Error('User not found');
+  }
+});
+// @desc   edits the  users
+// @route   GET /api/user/:id
+// @access  Private && Admin
+
+export const editUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin;
+
+    const newUser = await user.save();
+
+    res.json({
+      _id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      isAdmin: newUser.isAdmin,
+    });
+  } else {
+    res.status(401);
+    throw new Error('User not found');
+  }
+});
+
 // @desc   gets the all users
 // @route   GET /api/users/
 // @access  Private && Admin

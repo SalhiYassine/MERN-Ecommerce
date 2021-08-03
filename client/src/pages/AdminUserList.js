@@ -71,7 +71,7 @@ const AdminUserList = ({ history, location }) => {
                     )}
                   </td>
                   <td>
-                    <LinkContainer to={`/users/${user._id}/edit`}>
+                    <LinkContainer to={`/admin/users/${user._id}/edit`}>
                       <Button variant='light'>
                         <i className='fas fa-edit'></i>
                       </Button>

@@ -23,6 +23,7 @@ import PaymentSelectionPage from './pages/PaymentSelectionPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
 import AdminUserList from './pages/AdminUserList';
+import AdminUserEditPage from './pages/AdminUserEditPage';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
@@ -92,6 +93,13 @@ const App = () => {
               isAuthenticated={userLoggedIn()}
               isAdmin={userAdmin()}
               component={AdminUserList}
+              exact
+            />
+            <AdminRoute
+              path={'/admin/users/:id'}
+              isAuthenticated={userLoggedIn()}
+              isAdmin={userAdmin()}
+              component={AdminUserEditPage}
             />
 
             {/* Not Logged In */}

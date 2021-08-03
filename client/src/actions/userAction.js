@@ -21,6 +21,12 @@ import {
   USER_ADMIN_DELETE_REQUEST,
   USER_ADMIN_DELETE_SUCCESS,
   USER_ADMIN_DELETE_FAIL,
+  USER_GET_DETAILS_REQUEST,
+  USER_GET_DETAILS_SUCCESS,
+  USER_GET_DETAILS_FAIL,
+  USER_ADMIN_UPDATE_DETAILS_REQUEST,
+  USER_ADMIN_UPDATE_DETAILS_SUCCESS,
+  USER_ADMIN_UPDATE_DETAILS_FAIL,
 } from '../constants/userConstants';
 import axios from 'axios';
 import { ORDER_PROFILE_RESET } from '../constants/orderConstants';
@@ -178,6 +184,39 @@ export const updateDetails = (user) => async (dispatch, getState) => {
     });
   }
 };
+export const updateAdminUserDetails =
+  (id, user) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_ADMIN_UPDATE_DETAILS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put(`/api/users/${id}`, user, config);
+
+      dispatch({
+        type: USER_ADMIN_UPDATE_DETAILS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_ADMIN_UPDATE_DETAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getUserAdminList = () => async (dispatch, getState) => {
   try {
@@ -237,6 +276,39 @@ export const deleteUserAdmin = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_ADMIN_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserAdminDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_GET_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_GET_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_GET_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
