@@ -88,7 +88,7 @@ const App = () => {
             />
             {/* Admin && Logged In */}
             <AdminRoute
-              path={'/admin'}
+              path={'/admin/users'}
               isAuthenticated={userLoggedIn()}
               isAdmin={userAdmin()}
               component={AdminUserList}

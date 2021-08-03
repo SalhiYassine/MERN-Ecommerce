@@ -18,6 +18,9 @@ import {
   USER_ADMIN_LIST_REQUEST,
   USER_ADMIN_LIST_SUCCESS,
   USER_ADMIN_LIST_FAIL,
+  USER_ADMIN_DELETE_REQUEST,
+  USER_ADMIN_DELETE_SUCCESS,
+  USER_ADMIN_DELETE_FAIL,
 } from '../constants/userConstants';
 import axios from 'axios';
 import { ORDER_PROFILE_RESET } from '../constants/orderConstants';
@@ -192,7 +195,7 @@ export const getUserAdminList = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.get(`api/users`, config);
+    const { data } = await axios.get(`/api/users`, config);
 
     dispatch({
       type: USER_ADMIN_LIST_SUCCESS,
@@ -201,6 +204,39 @@ export const getUserAdminList = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_ADMIN_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteUserAdmin = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_ADMIN_DELETE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const { data } = await axios.delete(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_ADMIN_DELETE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ADMIN_DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

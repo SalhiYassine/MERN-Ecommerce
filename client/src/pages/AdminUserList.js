@@ -4,22 +4,32 @@ import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getUserAdminList } from '../actions/userAction';
+import { getUserAdminList, deleteUserAdmin } from '../actions/userAction';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
 
 const AdminUserList = ({ history, location }) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getUserAdminList());
-  }, [dispatch]);
-
   const { loading, success, error, userList } = useSelector(
     (state) => state.userAdminList
   );
+  const { success: successDelete } = useSelector(
+    (state) => state.userAdminDeleteUser
+  );
 
-  const deleteHandler = (id) => {};
+  useEffect(() => {
+    dispatch(getUserAdminList());
+  }, [dispatch, history, successDelete]);
+
+  const deleteHandler = (id) => {
+    if (
+      window.confirm(
+        'You are about to delete a user, are you sure you wish to proceed?'
+      )
+    )
+      dispatch(deleteUserAdmin(id));
+  };
 
   return (
     <>
