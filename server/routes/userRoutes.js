@@ -17,16 +17,16 @@ const router = express.Router();
 
 router.route('/').post(registerUser).get(protect, admin, getUsers);
 router
+  .route('/profile')
+  .get(protect, getUserProfile)
+  .put(protect, editUserProfile);
+
+router
   .route('/:id')
   .get(protect, admin, getUser)
   .put(protect, admin, editUser)
   .delete(protect, admin, deleteUser);
 
 router.post('/login', authUser);
-
-router
-  .route('/profile')
-  .get(protect, getUserProfile)
-  .put(protect, editUserProfile);
 
 export default router;

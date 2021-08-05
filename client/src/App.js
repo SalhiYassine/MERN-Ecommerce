@@ -24,6 +24,7 @@ import PlaceOrderPage from './pages/PlaceOrderPage';
 import OrderPage from './pages/OrderPage';
 import AdminUserList from './pages/AdminUserList';
 import AdminUserEditPage from './pages/AdminUserEditPage';
+import AdminProductListPage from './pages/AdminProductListPage';
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
@@ -88,6 +89,13 @@ const App = () => {
               component={PlaceOrderPage}
             />
             {/* Admin && Logged In */}
+            <AdminRoute
+              path={'/admin/products'}
+              isAuthenticated={userLoggedIn()}
+              isAdmin={userAdmin()}
+              component={AdminProductListPage}
+              exact
+            />
             <AdminRoute
               path={'/admin/users'}
               isAuthenticated={userLoggedIn()}

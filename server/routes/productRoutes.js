@@ -2,9 +2,11 @@ import express from 'express';
 import Product from '../models/productModel.js';
 import asyncHandler from 'express-async-handler';
 import {
+  deleteProduct,
   getProductById,
   getProducts,
 } from '../controllers/productController.js';
+import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -13,9 +15,9 @@ const router = express.Router();
 // @access  Public
 router.route('/').get(getProducts);
 
-// @desc    Fetch single product
-// @route   GET /api/products/:id
-// @access  Public
-router.route('/:id').get(getProductById);
+// @desc    DELETE single product
+// @route   DELETE /api/products/:id
+// @access  Admin and Auth
+router.route('/:id').get(getProductById).delete(protect, admin, deleteProduct);
 
 export default router;
