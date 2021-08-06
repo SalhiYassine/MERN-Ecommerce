@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import { listProducts, deleteProduct } from '../actions/productActions';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 
 const AdminProductListPage = ({ history, match }) => {
   const dispatch = useDispatch();
@@ -20,10 +21,26 @@ const AdminProductListPage = ({ history, match }) => {
     error: deleteError,
   } = useSelector((state) => state.productDelete);
 
-  const deleteHandler = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      dispatch(deleteProduct(id));
-    }
+  const deleteHandler = (product) => {
+    const { _id, name } = product;
+    Swal.fire({
+      title: `Are you sure you want to delete "${name}"`,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteProduct(_id));
+        Swal.fire(
+          'Deleted!',
+          `The product "${name}" has been deleted.`,
+          'success'
+        );
+      }
+    });
   };
 
   useEffect(() => {
@@ -81,7 +98,7 @@ const AdminProductListPage = ({ history, match }) => {
                       </Button>
                     </LinkContainer>
                     <Button
-                      onClick={() => deleteHandler(product._id)}
+                      onClick={() => deleteHandler(product)}
                       variant='light'>
                       <i style={{ color: 'red' }} className='fas fa-trash'></i>
                     </Button>

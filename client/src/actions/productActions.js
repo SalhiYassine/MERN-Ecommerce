@@ -8,6 +8,9 @@ import {
   PRODUCT_DELETE_REQUEST,
   PRODUCT_DELETE_SUCCESS,
   PRODUCT_DELETE_FAIL,
+  PRODUCT_EDIT_REQUEST,
+  PRODUCT_EDIT_SUCCESS,
+  PRODUCT_EDIT_FAIL,
 } from '../constants/productConstants';
 import axios from 'axios';
 
@@ -62,6 +65,35 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const editProduct = (id, product) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_EDIT_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/products/${id}`, product, config);
+
+    dispatch({ type: PRODUCT_EDIT_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_EDIT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

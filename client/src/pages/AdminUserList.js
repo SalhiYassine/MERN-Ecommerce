@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import { getUserAdminList, deleteUserAdmin } from '../actions/userAction';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 
 const AdminUserList = ({ history, location }) => {
   const dispatch = useDispatch();
@@ -22,13 +23,26 @@ const AdminUserList = ({ history, location }) => {
     dispatch(getUserAdminList());
   }, [dispatch, history, successDelete]);
 
-  const deleteHandler = (id) => {
-    if (
-      window.confirm(
-        'You are about to delete a user, are you sure you wish to proceed?'
-      )
-    )
-      dispatch(deleteUserAdmin(id));
+  const deleteHandler = (user) => {
+    const { _id, name } = user;
+    Swal.fire({
+      title: `Are you sure you want to remove "${name}"`,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteUserAdmin(_id));
+        Swal.fire(
+          'Deleted!',
+          `The user "${name}" has been removed.`,
+          'success'
+        );
+      }
+    });
   };
 
   return (
@@ -76,9 +90,7 @@ const AdminUserList = ({ history, location }) => {
                         <i className='fas fa-edit'></i>
                       </Button>
                     </LinkContainer>
-                    <Button
-                      onClick={() => deleteHandler(user._id)}
-                      variant='light'>
+                    <Button onClick={() => deleteHandler(user)} variant='light'>
                       <i style={{ color: 'red' }} className='fas fa-trash'></i>
                     </Button>
                   </td>
