@@ -2,22 +2,18 @@ import express from 'express';
 import Product from '../models/productModel.js';
 import asyncHandler from 'express-async-handler';
 import {
+  createProduct,
   deleteProduct,
   getProductById,
   getProducts,
+  updateProduct,
 } from '../controllers/productController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// @desc    Fetch all products
-// @route   GET /api/products
-// @access  Public
-router.route('/').get(getProducts);
+router.route('/').get(getProducts).post(protect, admin, createProduct);
 
-// @desc    DELETE single product
-// @route   DELETE /api/products/:id
-// @access  Admin and Auth
-router.route('/:id').get(getProductById).delete(protect, admin, deleteProduct);
+router.route('/:id').get(getProductById).delete(protect, admin, deleteProduct).put(protect, admin, updateProduct);
 
 export default router;

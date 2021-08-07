@@ -4,10 +4,15 @@ import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listProducts, deleteProduct } from '../actions/productActions';
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from '../actions/productActions';
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 
 const AdminProductListPage = ({ history, match }) => {
   const dispatch = useDispatch();
@@ -21,6 +26,28 @@ const AdminProductListPage = ({ history, match }) => {
     error: deleteError,
   } = useSelector((state) => state.productDelete);
 
+  const {
+    loading: createLoading,
+    product: createProductResponse,
+    success: createSuccess,
+    error: createError,
+  } = useSelector((state) => state.productCreate);
+
+  const createHandler = () => {
+    Swal.fire({
+      title: `Are you sure you want to create a new product?`,
+      text: 'You will be redirected.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, create it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(createProduct());
+      }
+    });
+  };
   const deleteHandler = (product) => {
     const { _id, name } = product;
     Swal.fire({
@@ -45,7 +72,29 @@ const AdminProductListPage = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(listProducts());
-  }, [dispatch, history, deleteSuccess]);
+    if (createSuccess) {
+      let timerInterval;
+      Swal.fire({
+        title: 'Product Created!',
+        html: 'You are being redirected.',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+          timerInterval = setInterval(() => {}, 100);
+        },
+        willClose: () => {
+          clearInterval(timerInterval);
+        },
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+          dispatch({ type: PRODUCT_CREATE_RESET });
+          history.push(`/admin/products/${createProductResponse._id}/edit`);
+        }
+      });
+    }
+  }, [dispatch, history, deleteSuccess, createSuccess]);
 
   return (
     <>
@@ -54,12 +103,17 @@ const AdminProductListPage = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className='text-end'>
-          <Button variant='dark' size='xl' className='my-3 '>
+          <Button
+            onClick={createHandler}
+            variant='dark'
+            size='xl'
+            className='my-3 '>
             <i className='fas fa-plus'></i> Create Product
           </Button>
         </Col>
       </Row>
       {deleteError && <Message variant='danger'>{deleteError}</Message>}
+      {createError && <Message variant='danger'>{createError}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
