@@ -12,7 +12,10 @@ import {
 import FormContainer from '../components/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import {
+  PRODUCT_CREATE_RESET,
+  PRODUCT_DELETE_RESET,
+} from '../constants/productConstants';
 
 const AdminProductListPage = ({ history, match }) => {
   const dispatch = useDispatch();
@@ -72,6 +75,9 @@ const AdminProductListPage = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(listProducts());
+    if (deleteSuccess) {
+      dispatch({ type: PRODUCT_DELETE_RESET });
+    }
     if (createSuccess) {
       let timerInterval;
       Swal.fire({
@@ -146,7 +152,7 @@ const AdminProductListPage = ({ history, match }) => {
                   <td>{product.brand}</td>
 
                   <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                    <LinkContainer to={`/admin/products/${product._id}/edit`}>
                       <Button variant='light'>
                         <i className='fas fa-edit'></i>
                       </Button>
