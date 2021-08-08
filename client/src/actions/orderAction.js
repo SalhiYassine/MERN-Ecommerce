@@ -12,6 +12,12 @@ import {
   ORDER_PROFILE_REQUEST,
   ORDER_PROFILE_SUCCESS,
   ORDER_PROFILE_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_LIST_FAIL,
+  ORDER_SHIPPED_REQUEST,
+  ORDER_SHIPPED_SUCCESS,
+  ORDER_SHIPPED_FAIL,
 } from '../constants/orderConstants';
 import axios from 'axios';
 
@@ -100,6 +106,34 @@ export const getMyOrders = () => async (dispatch, getState) => {
     });
   }
 };
+export const getAllOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders`, config);
+
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
   try {
@@ -126,6 +160,34 @@ export const payOrder = (id, paymentResult) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_PAY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+export const shipOrder = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_SHIPPED_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(`/api/orders/${id}/shipped`, {}, config);
+
+    dispatch({ type: ORDER_SHIPPED_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: ORDER_SHIPPED_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

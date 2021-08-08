@@ -5,7 +5,11 @@ import asyncHandler from 'express-async-handler';
 // @route   GET /api/orders
 // @access  Private
 export const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
+  const orders = await Order.find({}).populate('user', 'id name');
+  if (!orders) {
+    res.status(404);
+    throw new Error('No orders found!');
+  }
   res.json(orders);
 });
 
@@ -61,6 +65,23 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     update_time: req.body.update_time,
     email_address: req.body.payer.email_address,
   };
+  const updatedOrder = await order.save();
+
+  res.json(updatedOrder);
+});
+export const updateOrderToShipped = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
+
+  if (!order) {
+    res.status(404);
+    throw new Error('No order found!');
+  }
+  order.isDelivered = true;
+  order.deliveredAt = Date.now();
+
   const updatedOrder = await order.save();
 
   res.json(updatedOrder);

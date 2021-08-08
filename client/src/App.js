@@ -26,7 +26,7 @@ import AdminUserList from './pages/AdminUserList';
 import AdminUserEditPage from './pages/AdminUserEditPage';
 import AdminProductListPage from './pages/AdminProductListPage';
 import AdminProductEditPage from './pages/AdminProductEditPage';
-
+import AdminOrderListPage from './pages/AdminOrderListPage';
 const App = () => {
   const { userInfo } = useSelector((state) => state.userLogin);
   const userLoggedIn = () => {
@@ -102,6 +102,13 @@ const App = () => {
               isAuthenticated={userLoggedIn()}
               isAdmin={userAdmin()}
               component={AdminProductEditPage}
+            />
+            <AdminRoute
+              path={'/admin/orders'}
+              isAuthenticated={userLoggedIn()}
+              isAdmin={userAdmin()}
+              component={AdminOrderListPage}
+              exact
             />
             <AdminRoute
               path={'/admin/users'}
