@@ -60,7 +60,12 @@ const App = () => {
         <Container>
           <Switch>
             {/* Routes */}
-            <Route path={['/', '/home']} exact component={HomePage} />
+            <Route path={['/search/:keyword']} component={HomePage} />
+            <Route
+              path={['/', '/home', '/search']}
+              exact
+              component={HomePage}
+            />
             <Route path={'/product/:id'} exact component={ProductPage} />
             <Route path={'/cart/:id?'} exact component={CartPage} />
             {/* Logged In */}
